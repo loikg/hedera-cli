@@ -1,3 +1,5 @@
+[![Build and run tests](https://github.com/loikg/hedera-cli/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/loikg/hedera-cli/actions/workflows/ci.yml)
+
 # hedera-cli
 
 This project is a work in progress and is not production ready. Use at your own risks.
