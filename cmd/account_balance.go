@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// balanceCmd represents the balance command
-var balanceCmd = &cobra.Command{
+// accountBalanceCmd represents the balance command
+var accountBalanceCmd = &cobra.Command{
 	Use:   "balance",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
@@ -28,17 +28,9 @@ var (
 )
 
 func init() {
-	accountCmd.AddCommand(balanceCmd)
+	accountCmd.AddCommand(accountBalanceCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// balanceCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// By default set --authorId value to the operator accountId from the config file
-	// If --authorId id provided on the command line then operator accountId will be ignore.
-	balanceCmd.Flags().StringVarP(&flagAccountID, "accountId", "i", "", "Account id of which the balance should be displayed")
+	accountBalanceCmd.Flags().StringVarP(&flagAccountID, "accountId", "i", "", "Account id of which the balance should be displayed")
 }
 
 func runAccountBalance(cmd *cobra.Command, args []string) {

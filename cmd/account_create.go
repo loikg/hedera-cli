@@ -9,8 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// createCmd represents the create command
-var createCmd = &cobra.Command{
+// accountCreateCmd represents the create command
+var accountCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create hedera accounts",
 	Long:  `Create hedera accounts with the configured operator account.`,
@@ -22,9 +22,9 @@ var (
 )
 
 func init() {
-	accountCmd.AddCommand(createCmd)
+	accountCmd.AddCommand(accountCreateCmd)
 
-	createCmd.Flags().Float64VarP(&balanceFlag, "balance", "b", 0, "Initial balance to transfer to the newly created account")
+	accountCreateCmd.Flags().Float64VarP(&balanceFlag, "balance", "b", 0, "Initial balance to transfer to the newly created account")
 }
 
 func accountCreate(cmd *cobra.Command, args []string) {
