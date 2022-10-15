@@ -11,6 +11,7 @@ const (
 	ConfigKeyOperatorPrivateKey = "operatorKey"
 	ConfigKeyNetwork            = "network"
 	ConfigKeyNetworks           = "networks"
+	ConfigKeyVerbose            = "verbose"
 
 	FlagDefaultNetwork = "local"
 )

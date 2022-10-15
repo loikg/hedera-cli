@@ -4,7 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/hashgraph/hedera-sdk-go/v2"
 	"github.com/loikg/hedera-cli/internal"
@@ -88,7 +88,7 @@ func runTokenCreate(cmd *cobra.Command, args []string) {
 	case flagTokenCreateTokenType == "ft":
 		tokenType = hedera.TokenTypeFungibleCommon
 	default:
-		fmt.Printf("Invalid value for --type flags. Allowed values are nft and ft")
+		cobra.CheckErr(errors.New("invalid value for --type flags. Allowed values are nft and ft"))
 	}
 
 	if flagSupplyKey != "" {

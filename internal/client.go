@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/hashgraph/hedera-sdk-go/v2"
 	"github.com/spf13/cobra"
@@ -22,7 +21,9 @@ func BuildHederaClientFromConfig() (*hedera.Client, error) {
 	cobra.CheckErr(err)
 	operatorID, operatorKey := resolveOperatorForNetork(network)
 
-	log.Printf("Network: %s\nOperatorId: %s, OperatorKey: %s\n", network, operatorID, operatorKey)
+	if viper.GetBool(ConfigKeyVerbose) {
+		fmt.Printf("Using network: %s, operatorId: %s, operatorKey: %s\n", network, operatorID, operatorKey)
+	}
 
 	parsedOperatorID, err := hedera.AccountIDFromString(operatorID)
 	if err != nil {

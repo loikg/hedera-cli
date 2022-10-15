@@ -13,10 +13,11 @@ import (
 )
 
 var (
-	cfgFile         string
-	flagOperatorID  string
-	flagOperatorKey string
-	flagNetwork     string
+	cfgFile string
+	// flagOperatorID  string
+	// flagOperatorKey string
+	flagNetwork string
+	flagVerbose bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -41,6 +42,9 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.hedera-cli.yaml)")
+
+	rootCmd.PersistentFlags().BoolVar(&flagVerbose, "verbose", false, "enable debug mesage useful for debugging")
+	viper.BindPFlag(internal.ConfigKeyVerbose, rootCmd.PersistentFlags().Lookup("verbose"))
 
 	rootCmd.PersistentFlags().StringVar(&flagNetwork, "network", internal.FlagDefaultNetwork, "Network to connect to either local,testnet or mainnet")
 	viper.BindPFlag(internal.ConfigKeyNetwork, rootCmd.PersistentFlags().Lookup("network"))
@@ -77,6 +81,8 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+		if viper.GetBool(internal.ConfigKeyVerbose) {
+			fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+		}
 	}
 }
