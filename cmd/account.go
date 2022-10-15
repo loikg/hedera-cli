@@ -13,7 +13,7 @@ import (
 // accountCmd represents the account command
 var accountCmd = &cobra.Command{
 	Use:   "account",
-	Short: "A brief description of your command",
+	Short: "Create, update, delete accounts",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

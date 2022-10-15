@@ -13,7 +13,7 @@ import (
 // tokenCmd represents the token command
 var tokenCmd = &cobra.Command{
 	Use:   "token",
-	Short: "A brief description of your command",
+	Short: "Create, update, delete fungible and non fungible tokens",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
