@@ -7,11 +7,17 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/loikg/hedera-cli/internal"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var (
+	cfgFile         string
+	flagOperatorID  string
+	flagOperatorKey string
+	flagNetwork     string
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -35,6 +41,17 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.hedera-cli.yaml)")
+
+	rootCmd.PersistentFlags().StringVar(&flagNetwork, "network", internal.FlagDefaultNetwork, "Network to connect to either local,testnet or mainnet")
+	viper.BindPFlag(internal.ConfigKeyNetwork, rootCmd.PersistentFlags().Lookup("network"))
+
+	// rootCmd.Flags().StringVar(&flagOperatorID, "operator-id", "", "Operator account id to use for all commands")
+	// viper.SetDefault(internal.ConfigKeyOperatorAccountID, rootCmd.Flags().Lookup("operator-id"))
+	// rootCmd.MarkFlagRequired("operator-id")
+
+	// rootCmd.Flags().StringVar(&flagOperatorKey, "operator-key", "", "Operator account key to use for all commands")
+	// viper.SetDefault(internal.ConfigKeyOperatorPrivateKey, rootCmd.Flags().Lookup("operator-key"))
+	// rootCmd.MarkFlagRequired("operator-key")
 }
 
 // initConfig reads in config file and ENV variables if set.

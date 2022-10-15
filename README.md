@@ -2,11 +2,11 @@
 
 # hedera-cli
 
-This project is a work in progress and is not production ready. Use at your own risks.
+This project is a work in progress and is not production ready. Use it at your own risks.
 
 hedera-cli make it easy to interact with the hedera blockchain from the command line.
 It can connect to a local hedera node, testnet and mainnet.
-Operator and network can be configured in the config file located at $HOME/.hedera-cli.yaml by default.
+Operators and networks can be configured in the config file located at $HOME/.hedera-cli.yaml by default.
 
 ## Install
 
@@ -14,16 +14,27 @@ Operator and network can be configured in the config file located at $HOME/.hede
 go install github.com/loikg/hedera-cli@latest
 ```
 
-## Config
+## Configuration
 
 By default hedera-cli looks for a config file in `$HOME/.hedera-cli.yaml`.
-This can be overrid with the --config flag.
+This can be overrided with the `--config` flag.
+
+You need to configure the operator account for the networks you wich to interact with.
 
 ```yaml
-operator:
-  accountId: 0.0.1022
-  privateKey: adf...
+networks:
+  local:
+    operatorId: "0.0.1022"
+    operatorKey: "xxxx"
+  testnet:
+    operatorId: "0.0.1022"
+    operatorKey: "xxxx"
+  mainnet:
+    operatorId: "0.0.1022"
+    operatorKey: "xxxx"
 ```
+
+By default hedera-cli will use the `local` network unless you specify a network with `--network`.
 
 ## Usage
 
