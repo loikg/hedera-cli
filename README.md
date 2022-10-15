@@ -14,6 +14,17 @@ Operator and network can be configured in the config file located at $HOME/.hede
 go install github.com/loikg/hedera-cli@latest
 ```
 
+## Config
+
+By default hedera-cli looks for a config file in `$HOME/.hedera-cli.yaml`.
+This can be overrid with the --config flag.
+
+```yaml
+operator:
+  accountId: 0.0.1022
+  privateKey: adf...
+```
+
 ## Usage
 
 ```
