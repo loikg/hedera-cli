@@ -45,12 +45,14 @@ Usage:
 Available Commands:
   account     Create, update, delete accounts
   completion  Generate the autocompletion script for the specified shell
+  create-key  Create a private key.
   help        Help about any command
   token       Create, update, delete fungible and non fungible tokens
 
 Flags:
-      --config string   config file (default is $HOME/.hedera-cli.yaml)
-  -h, --help            help for hedera-cli
+      --config string    config file (default is $HOME/.hedera-cli.yaml)
+  -h, --help             help for hedera-cli
+      --network string   Network to connect to either local,testnet or mainnet (default "local")
 
 Use "hedera-cli [command] --help" for more information about a command.
 ```
