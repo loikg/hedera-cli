@@ -1,7 +1,7 @@
-name: Build
+name: CI
 on: [push]
 jobs:
-  BuildAndLint:
+  CI:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.1.0
@@ -17,7 +17,6 @@ jobs:
       - uses: actions/setup-node@v3.5.1
         with:
           node-version: 16.17.1
-          cache: "npm"
       - name: Install @hashgraph/hedera-local
         run: npm install @hashgraph/hedera-local -g
       - name: Start hedera-local
