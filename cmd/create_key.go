@@ -18,14 +18,14 @@ var createKeyCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(createKeyCmd)
+	RootCmd.AddCommand(createKeyCmd)
 }
 
 func runCreateKey(cmd *cobra.Command, args []string) {
 	privateKey, err := hedera.GeneratePrivateKey()
 	cobra.CheckErr(err)
 
-	internal.PrettyPrintJSON(internal.M{
+	cmd.Println(internal.M{
 		"privateKey": privateKey.StringRaw(),
 		"publicKey":  privateKey.PublicKey().StringRaw(),
 	})

@@ -14,7 +14,7 @@ var accountCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create hedera accounts",
 	Long:  `Create hedera accounts with the configured operator account.`,
-	Run:   accountCreate,
+	Run:   runAccountCreate,
 }
 
 var (
@@ -27,7 +27,7 @@ func init() {
 	accountCreateCmd.Flags().Float64VarP(&balanceFlag, "balance", "b", 0, "Initial balance to transfer to the newly created account")
 }
 
-func accountCreate(cmd *cobra.Command, args []string) {
+func runAccountCreate(cmd *cobra.Command, args []string) {
 	client, err := internal.BuildHederaClientFromConfig()
 	cobra.CheckErr(err)
 
@@ -46,5 +46,5 @@ func accountCreate(cmd *cobra.Command, args []string) {
 	cobra.CheckErr(err)
 
 	toPrint := internal.M{"accountId": receipt.AccountID.String(), "privateKey": newAccountPrivateKey.StringRaw(), "publicKey": newAccountPublicKey.StringRaw()}
-	internal.PrettyPrintJSON(toPrint)
+	cmd.Println(toPrint)
 }

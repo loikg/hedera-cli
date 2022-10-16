@@ -48,7 +48,7 @@ func runAccountBalance(cmd *cobra.Command, args []string) {
 	balanceCheckTx, err := hedera.NewAccountBalanceQuery().SetAccountID(accountID).Execute(client)
 	cobra.CheckErr(err)
 
-	internal.PrettyPrintJSON(internal.M{
+	cmd.Println(internal.M{
 		"tokens":  balanceCheckTx.Tokens,
 		"tinybar": balanceCheckTx.Hbars.AsTinybar(),
 	})

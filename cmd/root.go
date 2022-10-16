@@ -20,8 +20,8 @@ var (
 	flagVerbose bool
 )
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
+// RootCmd represents the base command when called without any subcommands
+var RootCmd = &cobra.Command{
 	Use:   "hedera-cli",
 	Short: "hedera-cli make it easy to interact with the hedera blockchain",
 	Long: `hedera-cli make it easy to interact with the hedera blockchain form the command line.
@@ -32,7 +32,7 @@ Operator and network can be configured in the config file located at $HOME/.hede
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	err := rootCmd.Execute()
+	err := RootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
@@ -41,13 +41,13 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.hedera-cli.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.hedera-cli.yaml)")
 
-	rootCmd.PersistentFlags().BoolVar(&flagVerbose, "verbose", false, "enable debug mesage useful for debugging")
-	viper.BindPFlag(internal.ConfigKeyVerbose, rootCmd.PersistentFlags().Lookup("verbose"))
+	RootCmd.PersistentFlags().BoolVar(&flagVerbose, "verbose", false, "enable debug mesage useful for debugging")
+	viper.BindPFlag(internal.ConfigKeyVerbose, RootCmd.PersistentFlags().Lookup("verbose"))
 
-	rootCmd.PersistentFlags().StringVar(&flagNetwork, "network", internal.FlagDefaultNetwork, "Network to connect to either local,testnet or mainnet")
-	viper.BindPFlag(internal.ConfigKeyNetwork, rootCmd.PersistentFlags().Lookup("network"))
+	RootCmd.PersistentFlags().StringVar(&flagNetwork, "network", internal.FlagDefaultNetwork, "Network to connect to either local,testnet or mainnet")
+	viper.BindPFlag(internal.ConfigKeyNetwork, RootCmd.PersistentFlags().Lookup("network"))
 
 	// rootCmd.Flags().StringVar(&flagOperatorID, "operator-id", "", "Operator account id to use for all commands")
 	// viper.SetDefault(internal.ConfigKeyOperatorAccountID, rootCmd.Flags().Lookup("operator-id"))

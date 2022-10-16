@@ -42,7 +42,7 @@ func runAccountShow(cmd *cobra.Command, args []string) {
 	accountInfo, err := hedera.NewAccountInfoQuery().SetAccountID(accountID).Execute(client)
 	cobra.CheckErr(err)
 
-	internal.PrettyPrintJSON(internal.M{
+	cmd.Println(internal.M{
 		"accountId":      accountInfo.AccountID.String(),
 		"accountMemo":    accountInfo.AccountMemo,
 		"tinyBarBalance": accountInfo.Balance.AsTinybar(),

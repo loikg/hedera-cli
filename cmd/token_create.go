@@ -115,7 +115,7 @@ func runTokenCreate(cmd *cobra.Command, args []string) {
 	tokenCreateRx, err := tokenCreateSubmit.GetReceipt(client)
 	cobra.CheckErr(err)
 
-	internal.PrettyPrintJSON(internal.M{
+	cmd.Println(internal.M{
 		"name":        flagTokenCreateTokenName,
 		"symbol":      flagTokenCreateTokenSymbol,
 		"tokenType":   tokenType,
