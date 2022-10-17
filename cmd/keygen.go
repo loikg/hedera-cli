@@ -11,7 +11,7 @@ import (
 
 // createKeyCmd represents the createKey command
 var createKeyCmd = &cobra.Command{
-	Use:   "create-key",
+	Use:   "keygen",
 	Short: "Create a private key.",
 	Long:  `Create a private key. Useful to create supply keys used when creating tokens.`,
 	Run:   runCreateKey,

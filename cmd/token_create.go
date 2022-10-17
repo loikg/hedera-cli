@@ -15,13 +15,8 @@ import (
 var tokenCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new token on the chain.",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: runTokenCreate,
+	Long:  `Create a new token. It can be a fungible token (ft) or a non-fungible token (nft)`,
+	Run:   runTokenCreate,
 }
 
 var (
@@ -45,7 +40,7 @@ func init() {
 	tokenCreateCmd.Flags().StringVarP(&flagTokenCreateTokenSymbol, "symbol", "s", "", "Sets the publicly visible token symbol. It is UTF-8 capitalized alphabetical string identifying the token")
 	tokenCreateCmd.MarkFlagRequired("symbol")
 
-	tokenCreateCmd.Flags().StringVarP(&flagTokenCreateTokenType, "type", "t", "", "Specifies the token type.")
+	tokenCreateCmd.Flags().StringVarP(&flagTokenCreateTokenType, "type", "t", "", "Specifies the token type. The value can be ft or nft")
 	tokenCreateCmd.MarkFlagRequired("type")
 
 	tokenCreateCmd.Flags().StringVarP(&flagTreasuryId, "treasury-id", "i", "", "Sets the account which will act as a treasury for the token. This account will receive the specified initial supply")
@@ -58,7 +53,7 @@ func init() {
 	tokenCreateCmd.Flags().Uint64VarP(&flagTokenCreateInitialBalance, "balance", "b", 0, "Specifies the initial supply of tokens to be put in circulation. The initial supply is sent to the Treasury Account. The supply is in the lowest denomination possible.")
 	tokenCreateCmd.Flags().UintVarP(&flagTokenCreateDecimals, "decimals", "d", 0, "Sets the number of decimal places a token is divisible by. This field can never be changed!")
 
-	tokenCreateCmd.Flags().BoolVarP(&flagTokenCreateIsFiniteSupply, "supply-type", "p", false, "Specifies the token supply type. Default infinit.")
+	tokenCreateCmd.Flags().BoolVarP(&flagTokenCreateIsFiniteSupply, "infinite", "p", false, "Set the supply to be infinite for the token")
 }
 
 func runTokenCreate(cmd *cobra.Command, args []string) {

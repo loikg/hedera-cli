@@ -47,6 +47,7 @@ func init() {
 	viper.BindPFlag(internal.ConfigKeyVerbose, RootCmd.PersistentFlags().Lookup("verbose"))
 
 	RootCmd.PersistentFlags().StringVar(&flagNetwork, "network", internal.FlagDefaultNetwork, "Network to connect to either local,testnet or mainnet")
+	RootCmd.MarkFlagRequired("network")
 	viper.BindPFlag(internal.ConfigKeyNetwork, RootCmd.PersistentFlags().Lookup("network"))
 
 	// rootCmd.Flags().StringVar(&flagOperatorID, "operator-id", "", "Operator account id to use for all commands")
