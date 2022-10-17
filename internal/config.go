@@ -12,8 +12,6 @@ const (
 	ConfigKeyNetwork            = "network"
 	ConfigKeyNetworks           = "networks"
 	ConfigKeyVerbose            = "verbose"
-
-	FlagDefaultNetwork = "local"
 )
 
 func resolveOperatorForNetork(network HederaNetwork) (string, string) {

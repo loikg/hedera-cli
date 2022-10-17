@@ -9,7 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// accountCreateCmd represents the create command
 var accountCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create hedera accounts",

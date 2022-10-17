@@ -46,17 +46,9 @@ func init() {
 	RootCmd.PersistentFlags().BoolVar(&flagVerbose, "verbose", false, "enable debug mesage useful for debugging")
 	viper.BindPFlag(internal.ConfigKeyVerbose, RootCmd.PersistentFlags().Lookup("verbose"))
 
-	RootCmd.PersistentFlags().StringVar(&flagNetwork, "network", internal.FlagDefaultNetwork, "Network to connect to either local,testnet or mainnet")
-	RootCmd.MarkFlagRequired("network")
+	RootCmd.PersistentFlags().StringVar(&flagNetwork, "network", "", "Network to connect to either local,testnet or mainnet")
+	RootCmd.MarkPersistentFlagRequired("network")
 	viper.BindPFlag(internal.ConfigKeyNetwork, RootCmd.PersistentFlags().Lookup("network"))
-
-	// rootCmd.Flags().StringVar(&flagOperatorID, "operator-id", "", "Operator account id to use for all commands")
-	// viper.SetDefault(internal.ConfigKeyOperatorAccountID, rootCmd.Flags().Lookup("operator-id"))
-	// rootCmd.MarkFlagRequired("operator-id")
-
-	// rootCmd.Flags().StringVar(&flagOperatorKey, "operator-key", "", "Operator account key to use for all commands")
-	// viper.SetDefault(internal.ConfigKeyOperatorPrivateKey, rootCmd.Flags().Lookup("operator-key"))
-	// rootCmd.MarkFlagRequired("operator-key")
 }
 
 // initConfig reads in config file and ENV variables if set.

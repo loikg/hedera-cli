@@ -15,7 +15,7 @@ func TestAccountCreateCommand(t *testing.T) {
 	cmd.RootCmd.SetOut(actual)
 	cmd.RootCmd.SetErr(actual)
 
-	cmd.RootCmd.SetArgs([]string{"account", "create", "--balance", "10.5"})
+	cmd.RootCmd.SetArgs([]string{"account", "--network", "local", "create", "--balance", "10.5"})
 	cmd.RootCmd.Execute()
 
 	var data internal.M

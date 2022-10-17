@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/hashgraph/hedera-sdk-go/v2"
 	"github.com/loikg/hedera-cli/internal"
@@ -16,7 +17,7 @@ var tokenCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new token on the chain.",
 	Long:  `Create a new token. It can be a fungible token (ft) or a non-fungible token (nft)`,
-	Run:   runTokenCreate,
+	RunE:  runTokenCreate,
 }
 
 var (
@@ -28,7 +29,7 @@ var (
 	flagSupplyKey                 string
 	flagTokenCreateInitialBalance uint64
 	flagTokenCreateDecimals       uint
-	flagTokenCreateIsFiniteSupply bool
+	flagTokenCreateSupplyType     string
 )
 
 func init() {
@@ -53,10 +54,11 @@ func init() {
 	tokenCreateCmd.Flags().Uint64VarP(&flagTokenCreateInitialBalance, "balance", "b", 0, "Specifies the initial supply of tokens to be put in circulation. The initial supply is sent to the Treasury Account. The supply is in the lowest denomination possible.")
 	tokenCreateCmd.Flags().UintVarP(&flagTokenCreateDecimals, "decimals", "d", 0, "Sets the number of decimal places a token is divisible by. This field can never be changed!")
 
-	tokenCreateCmd.Flags().BoolVarP(&flagTokenCreateIsFiniteSupply, "infinite", "p", false, "Set the supply to be infinite for the token")
+	tokenCreateCmd.Flags().StringVarP(&flagTokenCreateSupplyType, "supply-type", "p", "", "Set the supply to be infinite for the token")
+	tokenCreateCmd.MarkFlagRequired("supply-type")
 }
 
-func runTokenCreate(cmd *cobra.Command, args []string) {
+func runTokenCreate(cmd *cobra.Command, args []string) error {
 	client, err := internal.BuildHederaClientFromConfig()
 	cobra.CheckErr(err)
 
@@ -65,16 +67,25 @@ func runTokenCreate(cmd *cobra.Command, args []string) {
 		treasuryId  hedera.AccountID
 		treasuryKey hedera.PrivateKey
 		tokenType   hedera.TokenType
-		supplyType  = hedera.TokenSupplyTypeInfinite
+		supplyType  hedera.TokenSupplyType
 	)
 
 	treasuryId, err = hedera.AccountIDFromString(flagTreasuryId)
-	cobra.CheckErr(err)
+	if err != nil {
+		return fmt.Errorf("invalid treasury id")
+	}
 	treasuryKey, err = hedera.PrivateKeyFromStringEd25519(flagTreasuryKey)
-	cobra.CheckErr(err)
+	if err != nil {
+		return fmt.Errorf("invalid treasury private key")
+	}
 
-	if flagTokenCreateIsFiniteSupply {
+	switch {
+	case flagTokenCreateSupplyType == "finite":
 		supplyType = hedera.TokenSupplyTypeFinite
+	case flagTokenCreateSupplyType == "infinite":
+		supplyType = hedera.TokenSupplyTypeInfinite
+	default:
+		return fmt.Errorf("invalid value %s for flag --%s", flagTokenCreateSupplyType, cmd.Flags().Lookup("supply-type").Name)
 	}
 
 	switch {
@@ -113,8 +124,9 @@ func runTokenCreate(cmd *cobra.Command, args []string) {
 	cmd.Println(internal.M{
 		"name":        flagTokenCreateTokenName,
 		"symbol":      flagTokenCreateTokenSymbol,
-		"tokenType":   tokenType,
+		"tokenType":   tokenType.String(),
 		"tokenId":     tokenCreateRx.TokenID.String(),
 		"totalSupply": tokenCreateRx.TotalSupply,
 	})
+	return nil
 }
