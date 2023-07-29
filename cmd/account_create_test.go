@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/loikg/hedera-cli/cmd"
 	"github.com/loikg/hedera-cli/internal"
-	"github.com/loikg/hedera-cli/pkg/hederatest"
+	"github.com/loikg/hedera-cli/internal/hederatest"
 )
 
 func TestAccountCreateCommand(t *testing.T) {
@@ -16,13 +18,12 @@ func TestAccountCreateCommand(t *testing.T) {
 	cmd.RootCmd.SetErr(actual)
 
 	cmd.RootCmd.SetArgs([]string{"account", "--network", "local", "create", "--balance", "10.5"})
-	cmd.RootCmd.Execute()
+	err := cmd.RootCmd.Execute()
+	require.NoError(t, err)
 
 	var data internal.M
-	err := json.Unmarshal(actual.Bytes(), &data)
-	if err != nil {
-		t.Fatalf("failed to unmarshal command output: %v", err)
-	}
+	err = json.Unmarshal(actual.Bytes(), &data)
+	require.NoError(t, err)
 
 	hederatest.AssertValidAccountID(t, data["accountId"])
 	hederatest.AssertValidKeyPair(t, data["privateKey"], data["publicKey"])
