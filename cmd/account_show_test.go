@@ -22,7 +22,7 @@ func TestAccountShowCommand(t *testing.T) {
 	"accountMemo": "",
 	"isDeleted": false,
 	"ownedNfts": 0,
-	"tinyBarBalance": 10000000000000
+	"tinyBarBalance": 1000000000000
 }`
 	assert.JSONEq(t, expectedOutput, actual.String())
 }
