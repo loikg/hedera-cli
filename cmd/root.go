@@ -65,8 +65,8 @@ func initConfig() {
 		cobra.CheckErr(err)
 
 		// Search config in home directory with name ".hedera-cli" (without extension).
-		viper.AddConfigPath(home)
 		viper.AddConfigPath(wd)
+		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
 		viper.SetConfigName(".hedera-cli")
 	}
