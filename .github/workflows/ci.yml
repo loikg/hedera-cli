@@ -4,21 +4,20 @@ jobs:
   CI:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@v3.5.3
       - name: Set up Go
-        uses: actions/setup-go@v3.3.0
+        uses: actions/setup-go@v4.0.1
         with:
-          go-version: 1.19.2
-          cache: true
+          go-version: 1.20.6
       - name: Run go vet
         run: go vet ./...
       - name: Run go build
         run: go build -v ./...
-      - uses: actions/setup-node@v3.5.1
+      - uses: actions/setup-node@v3.7.0
         with:
-          node-version: 16.17.1
+          node-version: 18.17.0
       - name: Install @hashgraph/hedera-local
-        run: npm install @hashgraph/hedera-local -g
+        run: npm install @hashgraph/hedera-local@v2.11.3 -g
       - name: Start hedera-local
         run: hedera start -d
       - name: Run go test
