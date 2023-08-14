@@ -13,10 +13,10 @@ jobs:
         with:
           fetch-depth: 0
       - run: git fetch --force --tags
-      - uses: actions/setup-go@v4.0.1
+      - uses: actions/setup-go@v4.1.0
         with:
           go-version: 1.20.6
-      - uses: goreleaser/goreleaser-action@v4.3.0
+      - uses: goreleaser/goreleaser-action@v4.4.0
         with:
           distribution: goreleaser
           version: latest
