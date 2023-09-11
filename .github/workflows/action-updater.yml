@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3.5.3
+      - uses: actions/checkout@v4.0.0
         with:
           # Default secrets.GITHUB_TOKEN does not have workflow access
           token: ${{ secrets.ACTION_UPDATER_GITHUB_TOKEN }}
 
       - name: Run GitHub Actions Version Updater
-        uses: saadmk11/github-actions-version-updater@v0.7.4
+        uses: saadmk11/github-actions-version-updater@v0.8.1
         with:
           # Default secrets.GITHUB_TOKEN does not have workflow access
           token: ${{ secrets.ACTION_UPDATER_GITHUB_TOKEN }}
