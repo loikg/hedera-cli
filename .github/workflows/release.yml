@@ -9,14 +9,14 @@ jobs:
   goreleaser:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.5.3
+      - uses: actions/checkout@v4.0.0
         with:
           fetch-depth: 0
       - run: git fetch --force --tags
-      - uses: actions/setup-go@v4.0.1
+      - uses: actions/setup-go@v4.1.0
         with:
           go-version: 1.20.6
-      - uses: goreleaser/goreleaser-action@v4.3.0
+      - uses: goreleaser/goreleaser-action@v5.0.0
         with:
           distribution: goreleaser
           version: latest
