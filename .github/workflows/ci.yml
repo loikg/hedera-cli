@@ -3,23 +3,27 @@ on: [push]
 jobs:
   CI:
     runs-on: ubuntu-latest
+    env:
+      HEDERA_NODE_VERSION: 2.14.0
     steps:
       - uses: actions/checkout@v4.1.0
       - name: Set up Go
         uses: actions/setup-go@v4.1.0
         with:
           go-version: 1.21.1
+      - uses: actions/setup-node@v3.8.1
+        with:
+          cache: npm
+          cache-dependency-path: .github/workflows/ci.yml
+          node-version: 20.7.0
       - name: Run go vet
         run: go vet ./...
       - name: Run go build
-        run: go build -v ./...
-      - uses: actions/setup-node@v3.8.1
-        with:
-          node-version: 20.7.0
-      - name: Install @hashgraph/hedera-local
-        run: npx --yes @hashgraph/hedera-local@v2.14.0 start --network local -d
+        run: go build -v
+      - name: Start hedera-local
+        run: npx --yes @hashgraph/hedera-local@v$HEDERA_NODE_VERSION start --network local -d
       - name: Run go test
         run: go test -v ./...
       - name: Stop hedera-local
         if: always()
-        run: npx --yes @hashgraph/hedera-local@v2.14.0 stop
+        run: npx --yes @hashgraph/hedera-local@v$HEDERA_NODE_VERSION stop
