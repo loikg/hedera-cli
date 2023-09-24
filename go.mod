@@ -1,6 +1,6 @@
 module github.com/loikg/hedera-cli
 
-go 1.19
+go 1.21
 
 require (
 	github.com/hashgraph/hedera-sdk-go/v2 v2.28.0
