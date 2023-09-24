@@ -1,28 +1,19 @@
 package cmd_test
 
 import (
-	"bytes"
 	"testing"
 
-	"github.com/loikg/hedera-cli/cmd"
+	"github.com/loikg/hedera-cli/internal/testutils"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAccountShowCommand(t *testing.T) {
 	accountID := "0.0.1026"
-	actual := new(bytes.Buffer)
-	cmd.RootCmd.SetOut(actual)
-	cmd.RootCmd.SetErr(actual)
+	expectedOutput := testutils.Testdata(t, "account_show.golden")
 
-	cmd.RootCmd.SetArgs([]string{"account", "show", "--account-id", accountID})
-	cmd.RootCmd.Execute()
+	actual, err := testutils.RunCLI(t, "--network", "local", "account", "show", "--account-id", accountID)
+	require.NoError(t, err)
 
-	expectedOutput := `{
-	"accountId": "0.0.1026",
-	"accountMemo": "",
-	"isDeleted": false,
-	"ownedNfts": 0,
-	"tinyBarBalance": 1000000000000
-}`
-	assert.JSONEq(t, expectedOutput, actual.String())
+	assert.JSONEq(t, string(expectedOutput), string(actual))
 }

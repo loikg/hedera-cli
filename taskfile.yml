@@ -3,14 +3,15 @@ version: "3"
 tasks:
   build:
     cmds:
-      - go build cmd/
+      - go build
 
   lint:
     cmds:
       - golangci-lint run ./...
 
   test:
+    deps: [build]
     cmds:
-      - hedera start -d -n local
-      - go test ./...
-      - hedera stop
+      - npx --yes @hashgraph/hedera-local@v2.14.0 start -d --network local
+      - go test -v ./...
+      - npx --yes @hashgraph/hedera-local@v2.14.0 stop

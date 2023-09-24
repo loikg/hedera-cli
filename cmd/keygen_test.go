@@ -4,21 +4,19 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	"github.com/loikg/hedera-cli/internal"
 	"github.com/loikg/hedera-cli/internal/hederatest"
 	"github.com/loikg/hedera-cli/internal/testutils"
+	"github.com/stretchr/testify/require"
 )
 
-func TestAccountCreateCommand(t *testing.T) {
-	actual, err := testutils.RunCLI(t, "account", "--network", "local", "create", "--balance", "10.5")
+func TestKeygen(t *testing.T) {
+	actual, err := testutils.RunCLI(t, "keygen")
 	require.NoError(t, err)
 
 	var data internal.M
 	err = json.Unmarshal(actual, &data)
 	require.NoError(t, err)
 
-	hederatest.AssertValidAccountID(t, data["accountId"])
 	hederatest.AssertValidKeyPair(t, data["privateKey"], data["publicKey"])
 }
