@@ -11,11 +11,10 @@ import (
 )
 
 func TestKeygen(t *testing.T) {
-	actual, err := testutils.RunCLI(t, "keygen")
-	require.NoError(t, err)
+	actual := testutils.RunCLI(t, "keygen")
 
 	var data internal.M
-	err = json.Unmarshal(actual, &data)
+	err := json.Unmarshal(actual, &data)
 	require.NoError(t, err)
 
 	hederatest.AssertValidKeyPair(t, data["privateKey"], data["publicKey"])

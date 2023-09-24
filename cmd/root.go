@@ -1,82 +1,47 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/loikg/hedera-cli/internal"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	"github.com/urfave/cli/v2"
 )
 
-var (
-	cfgFile string
-	// flagOperatorID  string
-	// flagOperatorKey string
-	flagNetwork string
-	flagVerbose bool
-)
-
-// RootCmd represents the base command when called without any subcommands
-var RootCmd = &cobra.Command{
-	Use:   "hedera-cli",
-	Short: "hedera-cli make it easy to interact with the hedera blockchain",
-	Long: `hedera-cli make it easy to interact with the hedera blockchain form the command line.
+var App = &cli.App{
+	Name:  "hedera-cli",
+	Usage: "hedera-cli make it easy to interact with the hedera blockchain",
+	Description: `hedera-cli make it easy to interact with the hedera blockchain form the command line.
 It can connect to a local hedera node, testnet and mainnet.
 Operator and network can be configured in the config file located at $HOME/.hedera-cli.yaml by default.`,
-}
-
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	RootCmd.SetOut(os.Stdout)
-	err := RootCmd.Execute()
-	if err != nil {
-		os.Exit(1)
-	}
-}
-
-func init() {
-	cobra.OnInitialize(initConfig)
-
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.hedera-cli.yaml)")
-
-	RootCmd.PersistentFlags().BoolVar(&flagVerbose, "verbose", false, "enable debug mesage useful for debugging")
-	viper.BindPFlag(internal.ConfigKeyVerbose, RootCmd.PersistentFlags().Lookup("verbose"))
-
-	RootCmd.PersistentFlags().StringVar(&flagNetwork, "network", "", "Network to connect to either local,testnet or mainnet")
-	RootCmd.MarkPersistentFlagRequired("network")
-	viper.BindPFlag(internal.ConfigKeyNetwork, RootCmd.PersistentFlags().Lookup("network"))
-}
-
-// initConfig reads in config file and ENV variables if set.
-func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
-		wd, err := os.Getwd()
-		cobra.CheckErr(err)
-
-		// Search config in home directory with name ".hedera-cli" (without extension).
-		viper.AddConfigPath(wd)
-		viper.AddConfigPath(home)
-		viper.SetConfigType("yaml")
-		viper.SetConfigName(".hedera-cli")
-	}
-
-	viper.AutomaticEnv() // read in environment variables that match
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		if viper.GetBool(internal.ConfigKeyVerbose) {
-			fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
-		}
-	}
+	Flags: []cli.Flag{
+		&cli.StringFlag{
+			Name:     "network",
+			Value:    "local",
+			Usage:    "Hedera network to connect to, possible values are local,testnet,mainnet",
+			EnvVars:  []string{"NETWORK"},
+			Required: true,
+			Action: func(ctx *cli.Context, value string) error {
+				if value != "local" && value != "testnet" && value != "mainnet" {
+					return fmt.Errorf("invalid network flag value: %s", value)
+				}
+				return nil
+			},
+		},
+		&cli.StringFlag{
+			Name:     "operator-id",
+			Usage:    "Hedera operator account id",
+			EnvVars:  []string{"OPERATOR_ID"},
+			Required: true,
+		},
+		&cli.StringFlag{
+			Name:     "operator-key",
+			Usage:    "Hedera operator account private key",
+			EnvVars:  []string{"OPERATOR_KEY"},
+			Required: true,
+		},
+	},
+	Commands: []*cli.Command{
+		accountCmd,
+		keygenCmd,
+		tokenCmd,
+	},
 }

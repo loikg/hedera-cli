@@ -1,11 +1,17 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package main
 
-import "github.com/loikg/hedera-cli/cmd"
+import (
+	"fmt"
+	"os"
+
+	"github.com/loikg/hedera-cli/cmd"
+)
 
 func main() {
-	cmd.Execute()
+	if err := cmd.App.Run(os.Args); err != nil {
+		fmt.Println(err)
+	}
 }

@@ -2,6 +2,7 @@
 package testutils
 
 import (
+	"errors"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -22,12 +23,21 @@ func Testdata(t *testing.T, filename string) []byte {
 }
 
 // RunCLI is a test help function to execute the cli binary with the given args arguments.
-func RunCLI(t *testing.T, args ...string) ([]byte, error) {
+func RunCLI(t *testing.T, args ...string) []byte {
 	t.Helper()
 
 	args = slices.Insert(args, 0, "--network")
 	args = slices.Insert(args, 1, "local")
 
 	binPath := filepath.Join("../", "hedera-cli")
-	return exec.Command(binPath, args...).Output()
+	output, err := exec.Command(binPath, args...).Output()
+	if err != nil {
+		var exitError *exec.ExitError
+		if errors.As(err, &exitError) {
+			t.Fatalf("failed to execute cli binary: %v: %s", exitError, string(exitError.Stderr))
+		}
+		t.Fatalf("failed to execute cli binary: %v", err)
+	}
+
+	return output
 }
