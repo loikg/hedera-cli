@@ -13,7 +13,7 @@ jobs:
         run: go vet ./...
       - name: Run go build
         run: go build -v ./...
-      - uses: actions/setup-node@v3.7.0
+      - uses: actions/setup-node@v3.8.1
         with:
           node-version: 18.17.0
       - name: Install @hashgraph/hedera-local
