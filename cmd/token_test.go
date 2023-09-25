@@ -11,6 +11,8 @@ import (
 )
 
 func TestTokenCreate(t *testing.T) {
+	t.Parallel()
+
 	args := []string{
 		"token",
 		"create",

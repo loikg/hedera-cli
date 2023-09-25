@@ -11,6 +11,8 @@ import (
 )
 
 func TestKeygen(t *testing.T) {
+	t.Parallel()
+
 	actual := testutils.RunCLI(t, "keygen")
 
 	var data internal.M

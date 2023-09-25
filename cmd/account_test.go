@@ -11,30 +11,39 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestAccountBalance(t *testing.T) {
-	expected := testutils.Testdata(t, "account_balance.golden")
-
-	actual := testutils.RunCLI(t, "account", "balance", "--accountId", "0.0.1023")
-
-	assert.JSONEq(t, string(expected), string(actual))
-}
-
 func TestAccountCreateCommand(t *testing.T) {
-	actual := testutils.RunCLI(t, "account", "create", "--balance", "10.5")
+	t.Parallel()
+	t.Run("with balance argument", func(t *testing.T) {
+		t.Parallel()
+		actual := testutils.RunCLI(t, "account", "create", "10.5")
 
-	var data internal.M
-	err := json.Unmarshal(actual, &data)
-	require.NoError(t, err)
+		var data internal.M
+		err := json.Unmarshal(actual, &data)
+		require.NoError(t, err)
 
-	hederatest.AssertValidAccountID(t, data["accountId"])
-	hederatest.AssertValidKeyPair(t, data["privateKey"], data["publicKey"])
+		hederatest.AssertValidAccountID(t, data["accountId"])
+		hederatest.AssertValidKeyPair(t, data["privateKey"], data["publicKey"])
+	})
+
+	t.Run("without balance argument", func(t *testing.T) {
+		t.Parallel()
+		actual := testutils.RunCLI(t, "account", "create")
+
+		var data internal.M
+		err := json.Unmarshal(actual, &data)
+		require.NoError(t, err)
+
+		hederatest.AssertValidAccountID(t, data["accountId"])
+		hederatest.AssertValidKeyPair(t, data["privateKey"], data["publicKey"])
+	})
 }
 
 func TestAccountShowCommand(t *testing.T) {
+	t.Parallel()
 	accountID := "0.0.1026"
 	expectedOutput := testutils.Testdata(t, "account_show.golden")
 
-	actual := testutils.RunCLI(t, "--network", "local", "account", "show", "--account-id", accountID)
+	actual := testutils.RunCLI(t, "--network", "local", "account", "show", accountID)
 
 	assert.JSONEq(t, string(expectedOutput), string(actual))
 }

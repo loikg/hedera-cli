@@ -38,3 +38,5 @@ go.work
 # bin
 hedera-cli
 dist/
+
+.env
