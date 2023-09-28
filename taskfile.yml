@@ -15,5 +15,5 @@ tasks:
     deps: [build]
     cmds:
       - npx --yes @hashgraph/hedera-local@v2.14.0 start -d --network local
+      - defer: npx --yes @hashgraph/hedera-local@v2.14.0 stop
       - go test -v ./...
-      - npx --yes @hashgraph/hedera-local@v2.14.0 stop
