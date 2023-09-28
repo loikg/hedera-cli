@@ -5,9 +5,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/loikg/hedera-cli/internal/cmd"
 	"os"
-
-	"github.com/loikg/hedera-cli/cmd"
 )
 
 func main() {

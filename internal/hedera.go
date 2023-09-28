@@ -62,15 +62,15 @@ func buildMainnetClient() *hedera.Client {
 	return hedera.ClientForMainnet()
 }
 
-func parseNetworkString(network string) (HederaNetwork, error) {
-	switch {
-	case network == "local":
-		return HederaNetworkLocal, nil
-	case network == "testnet":
-		return HederaNetworkTestNet, nil
-	case network == "mainnet":
-		return HederaNetworkMainnet, nil
-	default:
-		return "", fmt.Errorf("unsupported network string: %s", network)
-	}
-}
+// func parseNetworkString(network string) (HederaNetwork, error) {
+// 	switch {
+// 	case network == "local":
+// 		return HederaNetworkLocal, nil
+// 	case network == "testnet":
+// 		return HederaNetworkTestNet, nil
+// 	case network == "mainnet":
+// 		return HederaNetworkMainnet, nil
+// 	default:
+// 		return "", fmt.Errorf("unsupported network string: %s", network)
+// 	}
+// }

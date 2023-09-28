@@ -29,7 +29,7 @@ func RunCLI(t *testing.T, args ...string) []byte {
 	args = slices.Insert(args, 0, "--network")
 	args = slices.Insert(args, 1, "local")
 
-	binPath := filepath.Join("../", "hedera-cli")
+	binPath := filepath.Join("..", "..", "hedera-cli")
 	output, err := exec.Command(binPath, args...).Output()
 	if err != nil {
 		var exitError *exec.ExitError

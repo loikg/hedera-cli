@@ -1,4 +1,4 @@
-package hederatest
+package testutils
 
 import (
 	"testing"

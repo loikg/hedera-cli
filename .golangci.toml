@@ -5,25 +5,25 @@ format = "colored-line-number"
 enable = [
     # Visit https://golangci-lint.run/usage/linters/
     # for the full, current list of available linters.
-    
+
     # Default linters
-    "errcheck", # Detect unchecked errors
-    "gosimple", # Suggest code simplifications
-    "govet", # Reports suspicious constructs
+    "errcheck",    # Detect unchecked errors
+    "gosimple",    # Suggest code simplifications
+    "govet",       # Reports suspicious constructs
     "ineffassign", # Detects unused variable assignments
     "staticcheck", # go vet on steroids
-    "typecheck", # Standard Go type checks
-    "unused", # Detect unused constants, variables, functions and types
+    "typecheck",   # Standard Go type checks
+    "unused",      # Detect unused constants, variables, functions and types
 
     # Suggested additional linters
-    "gocyclo", # or "cyclop", # Detect cyclomatic complexity
-    "goconst", # Detect repeated values that can be made constants
-    "gofumpt", # Or "gofmt", # Enforce standard formatting
+    "gocyclo",   # or "cyclop", # Detect cyclomatic complexity
+    "goconst",   # Detect repeated values that can be made constants
+    "gofumpt",   # Or "gofmt", # Enforce standard formatting
     "goimports", # Ensure standard import formatting/ordering
-    "misspell", # Fix spelling errors
-    "revive",  # General purpose linter    
+    "misspell",  # Fix spelling errors
+    "revive",    # General purpose linter    
     "unconvert", # Detect unnecessary type conversions
-    "unparam", # Detect unused function parameters
+    "unparam",   # Detect unused function parameters
 
     # Optional
     "bodyclose", # Check whether HTTP response bodies are closed

@@ -30,6 +30,12 @@ var accountCmd = &cli.Command{
 			ArgsUsage: "<account_id>",
 			Action:    showAccountAction,
 		},
+		// {
+		// 	Name:      "delete",
+		// 	Usage:     "Delete an hedera account",
+		// 	ArgsUsage: "<account_id> <account_private_key>",
+		// 	Action:    deleteAccountAction,
+		// },
 	},
 }
 
@@ -129,18 +135,18 @@ func getHederaAccount(c *hedera.Client, accountID hedera.AccountID) (*hederaAcco
 
 	g.Go(func() error {
 		data, err := hedera.NewAccountInfoQuery().SetAccountID(accountID).Execute(c)
-	if err != nil {
-		return err
-	}
+		if err != nil {
+			return err
+		}
 		accountInfo = data
 		return nil
 	})
 
 	g.Go(func() error {
 		data, err := hedera.NewAccountBalanceQuery().SetAccountID(accountID).Execute(c)
-	if err != nil {
-		return err
-	}
+		if err != nil {
+			return err
+		}
 		accountBalance = data
 		return nil
 	})
@@ -154,3 +160,67 @@ func getHederaAccount(c *hedera.Client, accountID hedera.AccountID) (*hederaAcco
 		balance: accountBalance,
 	}, nil
 }
+
+// func deleteAccountAction(ctx *cli.Context) error {
+// 	client, err := internal.BuildHederaClient(internal.BuildHederaClientOptions{
+// 		Network:     internal.HederaNetwork(ctx.String("network")),
+// 		OperatorID:  ctx.String("operator-id"),
+// 		OperatorKey: ctx.String("operator-key"),
+// 	})
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	if ctx.NArg() != 2 {
+// 		cli.ShowSubcommandHelpAndExit(ctx, 1)
+// 	}
+
+// 	accountID, err := hedera.AccountIDFromString(ctx.Args().First())
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	accountKey, err := hedera.PrivateKeyFromString(ctx.Args().Get(1))
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	operatorID, err := operatorIDFromCtx(ctx)
+// 	if err != nil {
+// 		return fmt.Errorf("Invalid operator-id: %v", err)
+// 	}
+// 	operatorKey, err := operatorKeyFromCtx(ctx)
+// 	if err != nil {
+// 		return fmt.Errorf("Invalid operator-key: %v", err)
+// 	}
+
+// 	tx, err := hedera.NewAccountDeleteTransaction().
+// 		SetAccountID(accountID).
+// 		SetTransferAccountID(operatorID).
+// 		FreezeWith(client)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	txResponse, err := tx.Sign(accountKey).Sign(operatorKey).Execute(client)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	receipt, err := txResponse.GetReceipt(client)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	fmt.Fprintf(ctx.App.Writer, "Status: %s\n", receipt.Status)
+
+// 	return nil
+// }
+
+// func operatorIDFromCtx(ctx *cli.Context) (hedera.AccountID, error) {
+// 	return hedera.AccountIDFromString(ctx.String("operator-id"))
+// }
+
+// func operatorKeyFromCtx(ctx *cli.Context) (hedera.PrivateKey, error) {
+// 	return hedera.PrivateKeyFromStringEd25519(ctx.String("operator-key"))
+// }
