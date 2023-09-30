@@ -216,9 +216,11 @@ func deleteAccountAction(ctx *cli.Context) error {
 		return err
 	}
 
-	_, err = fmt.Fprintf(ctx.App.Writer, "Status: %s\n", receipt.Status)
-	if err != nil {
-		return err
+	if receipt.Status != hedera.StatusSuccess {
+		_, err := fmt.Fprintf(ctx.App.Writer, "Error status: %v\n", receipt.Status)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

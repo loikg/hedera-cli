@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/hashgraph/hedera-sdk-go/v2"
@@ -72,6 +73,13 @@ var tokenCmd = &cli.Command{
 				},
 			},
 			Action: tokenCreateAction,
+		},
+		{
+			Name:      "show",
+			Aliases:   []string{"s"},
+			Usage:     "Show information about a token",
+			ArgsUsage: "<token_id>",
+			Action:    tokenShowAction,
 		},
 	},
 }
@@ -167,4 +175,47 @@ func tokenCreateAction(ctx *cli.Context) error {
 	})
 
 	return nil
+}
+
+type TokenInfo struct {
+	TokenID     string `json:"tokenId"`
+	TotalSupply uint64 `json:"totalSupply"`
+	Decimals    uint32 `json:"decimals"`
+	Treasury    string `json:"treasury"`
+}
+
+func tokenShowAction(ctx *cli.Context) error {
+	client, err := internal.BuildHederaClient(internal.BuildHederaClientOptions{
+		Network:     internal.HederaNetwork(ctx.String("network")),
+		OperatorID:  ctx.String("operator-id"),
+		OperatorKey: ctx.String("operator-key"),
+	})
+	if err != nil {
+		return err
+	}
+
+	if ctx.NArg() != 1 {
+		cli.ShowSubcommandHelp(ctx)
+		return nil
+	}
+	tokenID, err := hedera.TokenIDFromString(ctx.Args().First())
+	if err != nil {
+		return err
+	}
+
+	tokenInfo, err := hedera.NewTokenInfoQuery().
+		SetTokenID(tokenID).Execute(client)
+	if err != nil {
+		return err
+	}
+
+	enc := json.NewEncoder(ctx.App.Writer)
+	enc.SetIndent("", "  ")
+
+	return enc.Encode(&TokenInfo{
+		TokenID:     tokenInfo.TokenID.String(),
+		TotalSupply: tokenInfo.TotalSupply,
+		Decimals:    tokenInfo.Decimals,
+		Treasury:    tokenInfo.Treasury.String(),
+	})
 }

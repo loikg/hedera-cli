@@ -61,7 +61,7 @@ func TestAccountDeleteCommand(t *testing.T) {
 
 	actual := testutils.RunCLI(t, "--network", "local", "account", "delete", accountID.String(), privateKey.String())
 
-	assert.Equal(t, "Status: SUCCESS\n", string(actual))
+	assert.Empty(t, actual)
 	var hederaError hedera.ErrHederaPreCheckStatus
 	_, err := testClient.GetAccount(accountID.String())
 	assert.ErrorAsf(t, err, &hederaError, "expected an ErrHederaPreCheckStatus but got %v instead", err)

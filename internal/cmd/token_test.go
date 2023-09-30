@@ -2,6 +2,8 @@ package cmd_test
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/hashgraph/hedera-sdk-go/v2"
 	"testing"
 
 	"github.com/loikg/hedera-cli/internal"
@@ -12,6 +14,7 @@ import (
 
 func TestTokenCreate(t *testing.T) {
 	t.Parallel()
+	testClient := testutils.NewHederaTestClient(t)
 
 	args := []string{
 		"token",
@@ -43,4 +46,32 @@ func TestTokenCreate(t *testing.T) {
 	assert.Equal(t, "myToken", data["name"])
 	assert.Equal(t, "TOKEN_TYPE_FUNGIBLE_COMMON", data["tokenType"])
 	assert.Equal(t, float64(0), data["totalSupply"])
+	_, err = testClient.GetToken(data["tokenId"].(string))
+	assert.NoError(t, err)
+}
+
+func TestTokenShow(t *testing.T) {
+	t.Parallel()
+	testClient := testutils.NewHederaTestClient(t)
+	treasuryID, treasuryKey := testClient.MustCreateAccount(0)
+	supplyKey := testClient.MustGenerateKey()
+	tokenID := testClient.MustCreateToken(&testutils.CreateTokenOptions{
+		Name:              "my token",
+		Symbol:            "MT",
+		Type:              hedera.TokenTypeFungibleCommon,
+		Decimals:          0,
+		InitialSupply:     0,
+		TreasuryAccountID: *treasuryID,
+		TreasuryKey:       treasuryKey,
+		SupplyType:        hedera.TokenSupplyTypeInfinite,
+		SupplyKey:         supplyKey,
+	})
+	expectedTpl := string(testutils.Testdata(t, "token_show.golden"))
+	expected := fmt.Sprintf(expectedTpl, tokenID.String(), treasuryID.String())
+
+	actual := testutils.RunCLI(t, "--network", "local", "token", "show", tokenID.String())
+
+	assert.Equal(t, expected, string(actual))
+	_, err := testClient.GetToken(tokenID.String())
+	assert.NoError(t, err)
 }

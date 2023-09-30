@@ -69,3 +69,66 @@ func (c HederaTestClient) MustCreateAccount(balance float64) (*hedera.AccountID,
 
 	return receipt.AccountID, privateKey
 }
+
+func (c HederaTestClient) GetToken(tokenIDStr string) (hedera.TokenInfo, error) {
+	tokenID, err := hedera.TokenIDFromString(tokenIDStr)
+	if err != nil {
+		c.t.Fatalf("failed to parse token id: %v", err)
+	}
+
+	return hedera.NewTokenInfoQuery().SetTokenID(tokenID).Execute(c.client)
+}
+
+type CreateTokenOptions struct {
+	Name              string
+	Symbol            string
+	Type              hedera.TokenType
+	Decimals          uint
+	InitialSupply     uint64
+	TreasuryAccountID hedera.AccountID
+	TreasuryKey       hedera.PrivateKey
+	SupplyType        hedera.TokenSupplyType
+	SupplyKey         hedera.PrivateKey
+}
+
+func (c HederaTestClient) MustCreateToken(opts *CreateTokenOptions) *hedera.TokenID {
+	tokenCreateTx, err := hedera.NewTokenCreateTransaction().
+		SetTokenName(opts.Name).
+		SetTokenSymbol(opts.Symbol).
+		SetTokenType(opts.Type).
+		SetDecimals(opts.Decimals).
+		SetInitialSupply(opts.InitialSupply).
+		SetTreasuryAccountID(opts.TreasuryAccountID).
+		SetSupplyType(opts.SupplyType).
+		SetSupplyKey(opts.SupplyKey).
+		FreezeWith(c.client)
+	if err != nil {
+		c.t.Fatalf("failed to build the token create transaction: %v", err)
+	}
+
+	tokenCreateSign := tokenCreateTx.Sign(opts.TreasuryKey)
+	tokenCreateSubmit, err := tokenCreateSign.Execute(c.client)
+	if err != nil {
+		c.t.Fatalf("failed to execute token create transaction: %v", err)
+	}
+
+	tokenCreateRx, err := tokenCreateSubmit.GetReceipt(c.client)
+	if err != nil {
+		c.t.Fatalf("failed to get receipt for token create transaction: %v", err)
+	}
+
+	if tokenCreateRx.Status != hedera.StatusSuccess {
+		c.t.Fatalf("create token transaction status is unsuccesful, actual status is: %v", tokenCreateRx.Status)
+	}
+
+	return tokenCreateRx.TokenID
+}
+
+func (c HederaTestClient) MustGenerateKey() hedera.PrivateKey {
+	key, err := hedera.PrivateKeyGenerateEd25519()
+	if err != nil {
+		c.t.Fatalf("failed to generate ed25519 key: %v", err)
+	}
+
+	return key
+}
