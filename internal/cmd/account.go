@@ -30,12 +30,13 @@ var accountCmd = &cli.Command{
 			ArgsUsage: "<account_id>",
 			Action:    showAccountAction,
 		},
-		// {
-		// 	Name:      "delete",
-		// 	Usage:     "Delete an hedera account",
-		// 	ArgsUsage: "<account_id> <account_private_key>",
-		// 	Action:    deleteAccountAction,
-		// },
+		{
+			Name:      "delete",
+			Usage:     "Delete an hedera account",
+			Aliases:   []string{"d"},
+			ArgsUsage: "<account_id> <account_private_key>",
+			Action:    deleteAccountAction,
+		},
 	},
 }
 
@@ -60,7 +61,7 @@ func createAccountAction(ctx *cli.Context) error {
 		balanceArg := ctx.Args().First()
 		parsedValue, err := strconv.ParseFloat(balanceArg, 64)
 		if err != nil {
-			return fmt.Errorf("Invliad balance argument %s", balanceArg)
+			return fmt.Errorf("invalid balance argument %s", balanceArg)
 		}
 		balance = parsedValue
 	}
@@ -78,9 +79,12 @@ func createAccountAction(ctx *cli.Context) error {
 		return err
 	}
 
-	toPrint := internal.M{"accountId": receipt.AccountID.String(), "privateKey": newAccountPrivateKey.StringRaw(), "publicKey": newAccountPublicKey.StringRaw()}
+	toPrint := internal.M{"accountId": receipt.AccountID.String(), "privateKey": newAccountPrivateKey.String(), "publicKey": newAccountPublicKey.String()}
 
-	fmt.Println(toPrint)
+	_, err = fmt.Fprintf(ctx.App.Writer, "%v", toPrint)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -161,66 +165,69 @@ func getHederaAccount(c *hedera.Client, accountID hedera.AccountID) (*hederaAcco
 	}, nil
 }
 
-// func deleteAccountAction(ctx *cli.Context) error {
-// 	client, err := internal.BuildHederaClient(internal.BuildHederaClientOptions{
-// 		Network:     internal.HederaNetwork(ctx.String("network")),
-// 		OperatorID:  ctx.String("operator-id"),
-// 		OperatorKey: ctx.String("operator-key"),
-// 	})
-// 	if err != nil {
-// 		return err
-// 	}
+func deleteAccountAction(ctx *cli.Context) error {
+	client, err := internal.BuildHederaClient(internal.BuildHederaClientOptions{
+		Network:     internal.HederaNetwork(ctx.String("network")),
+		OperatorID:  ctx.String("operator-id"),
+		OperatorKey: ctx.String("operator-key"),
+	})
+	if err != nil {
+		return err
+	}
 
-// 	if ctx.NArg() != 2 {
-// 		cli.ShowSubcommandHelpAndExit(ctx, 1)
-// 	}
+	if ctx.NArg() != 2 {
+		cli.ShowSubcommandHelpAndExit(ctx, 1)
+	}
 
-// 	accountID, err := hedera.AccountIDFromString(ctx.Args().First())
-// 	if err != nil {
-// 		return err
-// 	}
+	accountID, err := hedera.AccountIDFromString(ctx.Args().First())
+	if err != nil {
+		return err
+	}
 
-// 	accountKey, err := hedera.PrivateKeyFromString(ctx.Args().Get(1))
-// 	if err != nil {
-// 		return err
-// 	}
+	accountKey, err := hedera.PrivateKeyFromString(ctx.Args().Get(1))
+	if err != nil {
+		return err
+	}
 
-// 	operatorID, err := operatorIDFromCtx(ctx)
-// 	if err != nil {
-// 		return fmt.Errorf("Invalid operator-id: %v", err)
-// 	}
-// 	operatorKey, err := operatorKeyFromCtx(ctx)
-// 	if err != nil {
-// 		return fmt.Errorf("Invalid operator-key: %v", err)
-// 	}
+	operatorID, err := operatorIDFromCtx(ctx)
+	if err != nil {
+		return fmt.Errorf("Invalid operator-id: %v", err)
+	}
+	operatorKey, err := operatorKeyFromCtx(ctx)
+	if err != nil {
+		return fmt.Errorf("Invalid operator-key: %v", err)
+	}
 
-// 	tx, err := hedera.NewAccountDeleteTransaction().
-// 		SetAccountID(accountID).
-// 		SetTransferAccountID(operatorID).
-// 		FreezeWith(client)
-// 	if err != nil {
-// 		return err
-// 	}
+	tx, err := hedera.NewAccountDeleteTransaction().
+		SetAccountID(accountID).
+		SetTransferAccountID(operatorID).
+		FreezeWith(client)
+	if err != nil {
+		return err
+	}
 
-// 	txResponse, err := tx.Sign(accountKey).Sign(operatorKey).Execute(client)
-// 	if err != nil {
-// 		return err
-// 	}
+	txResponse, err := tx.Sign(accountKey).Sign(operatorKey).Execute(client)
+	if err != nil {
+		return err
+	}
 
-// 	receipt, err := txResponse.GetReceipt(client)
-// 	if err != nil {
-// 		return err
-// 	}
+	receipt, err := txResponse.GetReceipt(client)
+	if err != nil {
+		return err
+	}
 
-// 	fmt.Fprintf(ctx.App.Writer, "Status: %s\n", receipt.Status)
+	_, err = fmt.Fprintf(ctx.App.Writer, "Status: %s\n", receipt.Status)
+	if err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	return nil
+}
 
-// func operatorIDFromCtx(ctx *cli.Context) (hedera.AccountID, error) {
-// 	return hedera.AccountIDFromString(ctx.String("operator-id"))
-// }
+func operatorIDFromCtx(ctx *cli.Context) (hedera.AccountID, error) {
+	return hedera.AccountIDFromString(ctx.String("operator-id"))
+}
 
-// func operatorKeyFromCtx(ctx *cli.Context) (hedera.PrivateKey, error) {
-// 	return hedera.PrivateKeyFromStringEd25519(ctx.String("operator-key"))
-// }
+func operatorKeyFromCtx(ctx *cli.Context) (hedera.PrivateKey, error) {
+	return hedera.PrivateKeyFromString(ctx.String("operator-key"))
+}

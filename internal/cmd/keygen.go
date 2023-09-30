@@ -22,8 +22,8 @@ func keygenAction(_ *cli.Context) error {
 	}
 
 	fmt.Println(internal.M{
-		"privateKey": privateKey.StringRaw(),
-		"publicKey":  privateKey.PublicKey().StringRaw(),
+		"privateKey": privateKey.String(),
+		"publicKey":  privateKey.PublicKey().String(),
 	})
 
 	return nil

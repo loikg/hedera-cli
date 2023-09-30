@@ -2,6 +2,7 @@ package cmd_test
 
 import (
 	"encoding/json"
+	"github.com/hashgraph/hedera-sdk-go/v2"
 	"testing"
 
 	"github.com/loikg/hedera-cli/internal"
@@ -23,7 +24,8 @@ func TestAccountCreateCommand(t *testing.T) {
 
 		testutils.AssertValidAccountID(t, data["accountId"])
 		testutils.AssertValidKeyPair(t, data["privateKey"], data["publicKey"])
-		testClient.MustGetAccount(data["accountId"].(string))
+		_, err = testClient.GetAccount(data["accountId"].(string))
+		assert.NoError(t, err)
 	})
 
 	t.Run("without balance argument", func(t *testing.T) {
@@ -37,7 +39,8 @@ func TestAccountCreateCommand(t *testing.T) {
 
 		testutils.AssertValidAccountID(t, data["accountId"])
 		testutils.AssertValidKeyPair(t, data["privateKey"], data["publicKey"])
-		testClient.MustGetAccount(data["accountId"].(string))
+		_, err = testClient.GetAccount(data["accountId"].(string))
+		assert.NoError(t, err)
 	})
 }
 
@@ -49,4 +52,18 @@ func TestAccountShowCommand(t *testing.T) {
 	actual := testutils.RunCLI(t, "--network", "local", "account", "show", accountID)
 
 	assert.JSONEq(t, string(expectedOutput), string(actual))
+}
+
+func TestAccountDeleteCommand(t *testing.T) {
+	t.Parallel()
+	testClient := testutils.NewHederaTestClient(t)
+	accountID, privateKey := testClient.MustCreateAccount(0)
+
+	actual := testutils.RunCLI(t, "--network", "local", "account", "delete", accountID.String(), privateKey.String())
+
+	assert.Equal(t, "Status: SUCCESS\n", string(actual))
+	var hederaError hedera.ErrHederaPreCheckStatus
+	_, err := testClient.GetAccount(accountID.String())
+	assert.ErrorAsf(t, err, &hederaError, "expected an ErrHederaPreCheckStatus but got %v instead", err)
+	assert.Equal(t, hedera.StatusAccountDeleted, hederaError.Status)
 }

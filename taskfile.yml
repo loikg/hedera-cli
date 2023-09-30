@@ -1,4 +1,6 @@
 version: "3"
+vars:
+  HEDERA_LOCAL_VERSION: v2.14.0
 
 dotenv: [".env"]
 
@@ -11,9 +13,16 @@ tasks:
     cmds:
       - golangci-lint run ./...
 
-  test:
-    deps: [build]
+  "hedera:start":
     cmds:
-      - npx --yes @hashgraph/hedera-local@v2.14.0 start -d --network local
-      - defer: npx --yes @hashgraph/hedera-local@v2.14.0 stop
+      - npx --yes @hashgraph/hedera-local@{{ .HEDERA_LOCAL_VERSION }} start -d --network local
+
+  "hedera:stop":
+    cmds:
+      -  npx --yes @hashgraph/hedera-local@{{ .HEDERA_LOCAL_VERSION }} stop
+
+  test:
+    deps: [build, "hedera:start"]
+    cmds:
+      - defer: {task: "hedera:stop"}
       - go test -v ./...
