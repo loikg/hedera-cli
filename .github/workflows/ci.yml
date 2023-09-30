@@ -5,25 +5,24 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HEDERA_NODE_VERSION: 2.14.0
+      NETWORK: local
+      OPERATOR_ID: ${{ secrets.OPERATOR_ID }}
+      OPERATOR_KEY: ${{ secrets.OPERATOR_KEY }}
     steps:
       - uses: actions/checkout@v4.1.0
       - name: Set up Go
         uses: actions/setup-go@v4.1.0
         with:
           go-version: 1.21.1
-      - uses: actions/setup-node@v3.8.1
+      - name: Install Task
+        uses: arduino/setup-task@v1.0.3
+      - name: Set up Node
+        uses: actions/setup-node@v3.8.1
         with:
           cache: npm
           cache-dependency-path: .github/workflows/ci.yml
           node-version: 20.7.0
       - name: Run go vet
         run: go vet ./...
-      - name: Run go build
-        run: go build -v
-      - name: Start hedera-local
-        run: npx --yes @hashgraph/hedera-local@v$HEDERA_NODE_VERSION start --network local -d
       - name: Run go test
-        run: go test -v ./...
-      - name: Stop hedera-local
-        if: always()
-        run: npx --yes @hashgraph/hedera-local@v$HEDERA_NODE_VERSION stop
+        run: task test
