@@ -2,8 +2,9 @@ package cmd_test
 
 import (
 	"encoding/json"
-	"github.com/hashgraph/hedera-sdk-go/v2"
 	"testing"
+
+	"github.com/hashgraph/hedera-sdk-go/v2"
 
 	"github.com/loikg/hedera-cli/internal"
 	"github.com/loikg/hedera-cli/internal/testutils"
@@ -47,7 +48,7 @@ func TestAccountCreateCommand(t *testing.T) {
 func TestAccountShowCommand(t *testing.T) {
 	t.Parallel()
 	accountID := "0.0.1026"
-	expectedOutput := testutils.Testdata(t, "account_show.golden")
+	expectedOutput := testutils.Testdata(t, "account_show.json")
 
 	actual := testutils.RunCLI(t, "--network", "local", "account", "show", accountID)
 

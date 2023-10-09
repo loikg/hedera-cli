@@ -3,8 +3,9 @@ package cmd_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hashgraph/hedera-sdk-go/v2"
 	"testing"
+
+	"github.com/hashgraph/hedera-sdk-go/v2"
 
 	"github.com/loikg/hedera-cli/internal"
 	"github.com/loikg/hedera-cli/internal/testutils"
@@ -66,7 +67,7 @@ func TestTokenShow(t *testing.T) {
 		SupplyType:        hedera.TokenSupplyTypeInfinite,
 		SupplyKey:         supplyKey,
 	})
-	expectedTpl := string(testutils.Testdata(t, "token_show.golden"))
+	expectedTpl := string(testutils.Testdata(t, "token_show.json"))
 	expected := fmt.Sprintf(expectedTpl, tokenID.String(), treasuryID.String())
 
 	actual := testutils.RunCLI(t, "--network", "local", "token", "show", tokenID.String())
