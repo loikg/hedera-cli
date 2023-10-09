@@ -1,4 +1,0 @@
-networks:
-  local:
-    operatorId: "0.0.1022"
-    operatorKey: "a608e2130a0a3cb34f86e757303c862bee353d9ab77ba4387ec084f881d420d4"

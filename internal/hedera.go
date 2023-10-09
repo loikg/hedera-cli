@@ -4,8 +4,6 @@ import (
 	"fmt"
 
 	"github.com/hashgraph/hedera-sdk-go/v2"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 type HederaNetwork string
@@ -16,20 +14,20 @@ const (
 	HederaNetworkMainnet HederaNetwork = "mainnet"
 )
 
-func BuildHederaClientFromConfig() (*hedera.Client, error) {
-	network, err := parseNetworkString(viper.GetString(ConfigKeyNetwork))
-	cobra.CheckErr(err)
-	operatorID, operatorKey := resolveOperatorForNetork(network)
+// BuildHederaClientOptions are options passed to BuildHederaClient
+type BuildHederaClientOptions struct {
+	Network     HederaNetwork
+	OperatorID  string
+	OperatorKey string
+}
 
-	if viper.GetBool(ConfigKeyVerbose) {
-		fmt.Printf("Using network: %s, operatorId: %s, operatorKey: %s\n", network, operatorID, operatorKey)
-	}
-
-	parsedOperatorID, err := hedera.AccountIDFromString(operatorID)
+// BuildHederaClient create a new *hedera.Client
+func BuildHederaClient(opts BuildHederaClientOptions) (*hedera.Client, error) {
+	parsedOperatorID, err := hedera.AccountIDFromString(opts.OperatorID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse operator account id %s: %v", operatorID, err)
+		return nil, fmt.Errorf("failed to parse operator account id %s: %v", opts.OperatorID, err)
 	}
-	parsedOperatorKey, err := hedera.PrivateKeyFromStringEd25519(operatorKey)
+	parsedOperatorKey, err := hedera.PrivateKeyFromStringEd25519(opts.OperatorKey)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse operator private key: %v", err)
 	}
@@ -37,14 +35,14 @@ func BuildHederaClientFromConfig() (*hedera.Client, error) {
 	var client *hedera.Client
 
 	switch {
-	case network == HederaNetworkLocal:
+	case opts.Network == HederaNetworkLocal:
 		client = buildLocalHederaClient()
-	case network == HederaNetworkTestNet:
+	case opts.Network == HederaNetworkTestNet:
 		client = buildTestnetClient()
-	case network == HederaNetworkMainnet:
+	case opts.Network == HederaNetworkMainnet:
 		client = buildMainnetClient()
 	default:
-		panic(fmt.Errorf("unknown network: %s", network))
+		panic(fmt.Errorf("unknown network: %s", opts.Network))
 	}
 
 	client.SetOperator(parsedOperatorID, parsedOperatorKey)
@@ -64,17 +62,4 @@ func buildLocalHederaClient() *hedera.Client {
 
 func buildMainnetClient() *hedera.Client {
 	return hedera.ClientForMainnet()
-}
-
-func parseNetworkString(network string) (HederaNetwork, error) {
-	switch {
-	case network == "local":
-		return HederaNetworkLocal, nil
-	case network == "testnet":
-		return HederaNetworkTestNet, nil
-	case network == "mainnet":
-		return HederaNetworkMainnet, nil
-	default:
-		return "", fmt.Errorf("unsupported network string: %s", network)
-	}
 }
