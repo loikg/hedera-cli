@@ -174,7 +174,7 @@ func tokenCreateAction(ctx *cli.Context) error {
 	})
 }
 
-type TokenInfo struct {
+type tokenInfo struct {
 	TokenID     string `json:"tokenId"`
 	TotalSupply uint64 `json:"totalSupply"`
 	Decimals    uint32 `json:"decimals"`
@@ -199,16 +199,16 @@ func tokenShowAction(ctx *cli.Context) error {
 		return err
 	}
 
-	tokenInfo, err := hedera.NewTokenInfoQuery().
+	info, err := hedera.NewTokenInfoQuery().
 		SetTokenID(tokenID).Execute(client)
 	if err != nil {
 		return err
 	}
 
-	return internal.ConsolePrint(ctx.App.Writer, &TokenInfo{
-		TokenID:     tokenInfo.TokenID.String(),
-		TotalSupply: tokenInfo.TotalSupply,
-		Decimals:    tokenInfo.Decimals,
-		Treasury:    tokenInfo.Treasury.String(),
+	return internal.ConsolePrint(ctx.App.Writer, &tokenInfo{
+		TokenID:     info.TokenID.String(),
+		TotalSupply: info.TotalSupply,
+		Decimals:    info.Decimals,
+		Treasury:    info.Treasury.String(),
 	})
 }

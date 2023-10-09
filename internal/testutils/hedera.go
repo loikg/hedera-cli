@@ -7,11 +7,14 @@ import (
 	"github.com/hashgraph/hedera-sdk-go/v2"
 )
 
+// HederaTestClient is a simple wrapper around a *hedera.Client use to make assertions
+// about the state of the chain in tests.
 type HederaTestClient struct {
 	client *hedera.Client
 	t      *testing.T
 }
 
+// NewHederaTestClient create a new HederaTestClient. Once client should be instanciated for each tests.
 func NewHederaTestClient(t *testing.T) *HederaTestClient {
 	t.Helper()
 
@@ -40,6 +43,7 @@ func NewHederaTestClient(t *testing.T) *HederaTestClient {
 	}
 }
 
+// GetAccount query an hedera account by account id.
 func (c HederaTestClient) GetAccount(accountID string) (hedera.AccountInfo, error) {
 	id, err := hedera.AccountIDFromString(accountID)
 	if err != nil {
@@ -48,6 +52,7 @@ func (c HederaTestClient) GetAccount(accountID string) (hedera.AccountInfo, erro
 	return hedera.NewAccountInfoQuery().SetAccountID(id).Execute(c.client)
 }
 
+// MustCreateAccount attempt to create an hedera account, it fails the current tests if any error occur.
 func (c HederaTestClient) MustCreateAccount(balance float64) (*hedera.AccountID, hedera.PrivateKey) {
 	privateKey, err := hedera.PrivateKeyGenerateEd25519()
 	if err != nil {
@@ -71,6 +76,7 @@ func (c HederaTestClient) MustCreateAccount(balance float64) (*hedera.AccountID,
 	return receipt.AccountID, privateKey
 }
 
+// GetToken query a token by token id.
 func (c HederaTestClient) GetToken(tokenIDStr string) (hedera.TokenInfo, error) {
 	tokenID, err := hedera.TokenIDFromString(tokenIDStr)
 	if err != nil {
@@ -80,6 +86,7 @@ func (c HederaTestClient) GetToken(tokenIDStr string) (hedera.TokenInfo, error) 
 	return hedera.NewTokenInfoQuery().SetTokenID(tokenID).Execute(c.client)
 }
 
+// CreateTokenOptions are options pass to HederaTestClient.MustCreateToken to create a new token.
 type CreateTokenOptions struct {
 	Name              string
 	Symbol            string
@@ -92,6 +99,7 @@ type CreateTokenOptions struct {
 	SupplyKey         hedera.PrivateKey
 }
 
+// MustCreateToken creates a new token with the given params. It fails the current test if any error occur.
 func (c HederaTestClient) MustCreateToken(opts *CreateTokenOptions) *hedera.TokenID {
 	tokenCreateTx, err := hedera.NewTokenCreateTransaction().
 		SetTokenName(opts.Name).
@@ -125,6 +133,7 @@ func (c HederaTestClient) MustCreateToken(opts *CreateTokenOptions) *hedera.Toke
 	return tokenCreateRx.TokenID
 }
 
+// MustGenerateKey generate a new key pair. It fails the current test if any error occur.
 func (c HederaTestClient) MustGenerateKey() hedera.PrivateKey {
 	key, err := hedera.PrivateKeyGenerateEd25519()
 	if err != nil {

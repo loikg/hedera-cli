@@ -14,12 +14,14 @@ const (
 	HederaNetworkMainnet HederaNetwork = "mainnet"
 )
 
+// BuildHederaClientOptions are options passed to BuildHederaClient
 type BuildHederaClientOptions struct {
 	Network     HederaNetwork
 	OperatorID  string
 	OperatorKey string
 }
 
+// BuildHederaClient create a new *hedera.Client
 func BuildHederaClient(opts BuildHederaClientOptions) (*hedera.Client, error) {
 	parsedOperatorID, err := hedera.AccountIDFromString(opts.OperatorID)
 	if err != nil {
@@ -61,16 +63,3 @@ func buildLocalHederaClient() *hedera.Client {
 func buildMainnetClient() *hedera.Client {
 	return hedera.ClientForMainnet()
 }
-
-// func parseNetworkString(network string) (HederaNetwork, error) {
-// 	switch {
-// 	case network == "local":
-// 		return HederaNetworkLocal, nil
-// 	case network == "testnet":
-// 		return HederaNetworkTestNet, nil
-// 	case network == "mainnet":
-// 		return HederaNetworkMainnet, nil
-// 	default:
-// 		return "", fmt.Errorf("unsupported network string: %s", network)
-// 	}
-// }
