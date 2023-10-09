@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/hashgraph/hedera-sdk-go/v2"
@@ -166,15 +165,13 @@ func tokenCreateAction(ctx *cli.Context) error {
 		return err
 	}
 
-	fmt.Println(internal.M{
+	return internal.ConsolePrint(ctx.App.Writer, internal.M{
 		"name":        tokenName,
 		"symbol":      tokenSymbol,
 		"tokenType":   tokenType.String(),
 		"tokenId":     tokenCreateRx.TokenID.String(),
 		"totalSupply": tokenCreateRx.TotalSupply,
 	})
-
-	return nil
 }
 
 type TokenInfo struct {
@@ -209,10 +206,7 @@ func tokenShowAction(ctx *cli.Context) error {
 		return err
 	}
 
-	enc := json.NewEncoder(ctx.App.Writer)
-	enc.SetIndent("", "  ")
-
-	return enc.Encode(&TokenInfo{
+	return internal.ConsolePrint(ctx.App.Writer, &TokenInfo{
 		TokenID:     tokenInfo.TokenID.String(),
 		TotalSupply: tokenInfo.TotalSupply,
 		Decimals:    tokenInfo.Decimals,

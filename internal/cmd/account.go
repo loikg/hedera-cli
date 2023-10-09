@@ -80,13 +80,7 @@ func createAccountAction(ctx *cli.Context) error {
 	}
 
 	toPrint := internal.M{"accountId": receipt.AccountID.String(), "privateKey": newAccountPrivateKey.String(), "publicKey": newAccountPublicKey.String()}
-
-	_, err = fmt.Fprintf(ctx.App.Writer, "%v", toPrint)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return internal.ConsolePrint(ctx.App.Writer, toPrint)
 }
 
 func showAccountAction(ctx *cli.Context) error {
@@ -113,7 +107,7 @@ func showAccountAction(ctx *cli.Context) error {
 		return nil
 	}
 
-	fmt.Println(internal.M{
+	return internal.ConsolePrint(ctx.App.Writer, internal.M{
 		"accountId":      data.info.AccountID.String(),
 		"accountMemo":    data.info.AccountMemo,
 		"tinyBarBalance": data.info.Balance.AsTinybar(),
@@ -121,8 +115,6 @@ func showAccountAction(ctx *cli.Context) error {
 		"ownedNfts":      data.info.OwnedNfts,
 		"tokens":         data.balance.Tokens,
 	})
-
-	return nil
 }
 
 type hederaAccountInfo struct {
