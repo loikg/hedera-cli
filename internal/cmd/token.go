@@ -192,8 +192,7 @@ func tokenShowAction(ctx *cli.Context) error {
 	}
 
 	if ctx.NArg() != 1 {
-		cli.ShowSubcommandHelp(ctx)
-		return nil
+		return cli.ShowSubcommandHelp(ctx)
 	}
 	tokenID, err := hedera.TokenIDFromString(ctx.Args().First())
 	if err != nil {
