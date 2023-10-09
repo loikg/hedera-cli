@@ -19,10 +19,10 @@ tasks:
 
   "hedera:stop":
     cmds:
-      -  npx --yes @hashgraph/hedera-local@{{ .HEDERA_LOCAL_VERSION }} stop
+      - npx --yes @hashgraph/hedera-local@{{ .HEDERA_LOCAL_VERSION }} stop
 
   test:
     deps: [build, "hedera:start"]
     cmds:
-      - defer: {task: "hedera:stop"}
+      - defer: { task: "hedera:stop" }
       - go test -v ./...

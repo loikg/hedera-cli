@@ -6,7 +6,6 @@ This project is a work in progress and is not production ready. Use it at your o
 
 hedera-cli make it easy to interact with the hedera blockchain from the command line.
 It can connect to a local hedera node, testnet and mainnet.
-Operators and networks can be configured in the config file located at $HOME/.hedera-cli.yaml by default.
 
 ## Install
 
@@ -14,51 +13,31 @@ Operators and networks can be configured in the config file located at $HOME/.he
 go install github.com/loikg/hedera-cli@latest
 ```
 
-## Configuration
-
-By default hedera-cli looks for a config file in `$HOME/.hedera-cli.yaml`.
-This can be overrided with the `--config` flag.
-
-You need to configure the operator account for the networks you wich to interact with.
-
-```yaml
-networks:
-  local:
-    operatorId: "0.0.1022"
-    operatorKey: "xxxx"
-  testnet:
-    operatorId: "0.0.1022"
-    operatorKey: "xxxx"
-  mainnet:
-    operatorId: "0.0.1022"
-    operatorKey: "xxxx"
-```
-
-By default hedera-cli will use the `local` network unless you specify a network with `--network`.
-
 ## Usage
 
 ```
-hedera-cli make it easy to interact with the hedera blockchain form the command line.
-It can connect to a local hedera node, testnet and mainnet.
-Operator and network can be configured in the config file located at $HOME/.hedera-cli.yaml by default.
+NAME:
+   hedera-cli - hedera-cli make it easy to interact with the hedera blockchain
 
-Usage:
-  hedera-cli [command]
+USAGE:
+   hedera-cli [global options] command [command options] [arguments...]
 
-Available Commands:
-  account     Create, update, delete accounts
-  completion  Generate the autocompletion script for the specified shell
-  help        Help about any command
-  keygen      Create a private key.
-  token       Create, update, delete fungible and non fungible tokens
-  version     Display version
+DESCRIPTION:
+   hedera-cli make it easy to interact with the hedera blockchain form the command line.
+   It can connect to a local hedera node, testnet and mainnet.
+   Operator and network can be configured inYou can either provide the
+   --network, --operator-id, --operator-key or use the HEDERA_NETWORK, HEDERA_OPERATOR_ID,
+   HEDERA_OPERATOR_KEY environment variables.
 
-Flags:
-      --config string    config file (default is $HOME/.hedera-cli.yaml)
-  -h, --help             help for hedera-cli
-      --network string   Network to connect to either local,testnet or mainnet
-      --verbose          enable debug mesage useful for debugging
+COMMANDS:
+   account, a  Manage hedera accounts
+   keygen, kg  Create a private key.
+   token, t    Create, update, delete fungible and non fungible tokens
+   help, h     Shows a list of commands or help for one command
 
-Use "hedera-cli [command] --help" for more information about a command.
+GLOBAL OPTIONS:
+   --network value       Hedera network to connect to, possible values are local,testnet,mainnet [$HEDERA_NETWORK, $NETWORK]
+   --operator-id value   Hedera operator account id [$HEDERA_OPERATOR_ID, $OPERATOR_ID]
+   --operator-key value  Hedera operator account private key [$HEDERA_OPERATOR_KEY, $OPERATOR_KEY]
+   --help, -h            show help
 ```
