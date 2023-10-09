@@ -41,3 +41,33 @@ GLOBAL OPTIONS:
    --operator-key value  Hedera operator account private key [$HEDERA_OPERATOR_KEY, $OPERATOR_KEY]
    --help, -h            show help
 ```
+
+## Examples
+
+### Create an account
+
+```shell
+export HEDERA_NETWORK=local
+export HEDERA_OPERATOR_ID=0.0.1022
+export HEDERA_OPERATOR_KEY=a608e2130a0a3cb34f86e757303c862bee353d9ab77ba4387ec084f881d420d4
+
+hedera-cli account create
+```
+
+### Create a fungible token
+
+```shell
+export HEDERA_NETWORK=local
+export HEDERA_OPERATOR_ID=0.0.1022
+export HEDERA_OPERATOR_KEY=a608e2130a0a3cb34f86e757303c862bee353d9ab77ba4387ec084f881d420d4
+
+hedera-cli token create \
+		--balance 100 \
+		--decimals 2 \
+		--name myToken \
+		--symbol MTK \
+		--type ft \
+		--supply-type infinite \
+		--treasury-id 0.0.1022 \
+		--treasury-key $HEDERA_OPERATOR_KEY
+```
