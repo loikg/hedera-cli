@@ -1,9 +1,10 @@
 package testutils
 
 import (
-	"github.com/hashgraph/hedera-sdk-go/v2"
 	"os"
 	"testing"
+
+	"github.com/hashgraph/hedera-sdk-go/v2"
 )
 
 type HederaTestClient struct {
@@ -118,7 +119,7 @@ func (c HederaTestClient) MustCreateToken(opts *CreateTokenOptions) *hedera.Toke
 	}
 
 	if tokenCreateRx.Status != hedera.StatusSuccess {
-		c.t.Fatalf("create token transaction status is unsuccesful, actual status is: %v", tokenCreateRx.Status)
+		c.t.Fatalf("create token transaction status is unsuccessful, actual status is: %v", tokenCreateRx.Status)
 	}
 
 	return tokenCreateRx.TokenID
