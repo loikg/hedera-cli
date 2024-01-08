@@ -6,7 +6,7 @@ require (
 	github.com/hashgraph/hedera-sdk-go/v2 v2.30.0
 	github.com/stretchr/testify v1.8.4
 	github.com/urfave/cli/v2 v2.25.7
-	golang.org/x/sync v0.4.0
+	golang.org/x/sync v0.6.0
 )
 
 require (
